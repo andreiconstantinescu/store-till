@@ -1,59 +1,60 @@
-const demonination = {
-  5000: '£50',
-  2000: '£20',
-  1000: '£10',
-  500: '£5,',
-  200: '£2',
-  100: '£1',
-  50: '50p',
-  20: '20p',
-  10: '10p',
-  5: '5p',
-  2: '2p',
-  1: '1p'
-}
+const {denomination, descendingSort} = require('./constants.js')
+const availableDenomination = Object.keys(denomination)
 
-const available = Object.keys(demonination).reverse()
+const splitAmount = ({currentDenomination, amount}) => {
+  let currentAmount = amount
+  const change = {}
 
-const splitAmount = amount => {
-  console.log(available)
-  return available.reduce(
-    (obj, item) => {
-      const {toChange} = obj
-
-      if (toChange >= item) {
-        const quantity = parseInt(toChange / item)
-        const out = {
-          toChange: toChange % item,
-          change: Object.assign({}, obj.change, {
-            [demonination[item]]: quantity
-          })
-        }
-
-        return Object.assign({}, obj, out)
-      }
-
-      return obj
-    },
-    {
-      toChange: amount,
-      change: {}
+  currentDenomination.map(item => {
+    if (currentAmount >= item) {
+      const quantity = parseInt(currentAmount / item)
+      currentAmount = currentAmount % item
+      Object.assign(change, {
+        [denomination[item]]: quantity
+      })
     }
-  )
+  })
+
+  return {
+    amount: currentAmount,
+    change
+  }
 }
 
-const getChange = (cost, payment) => {
-  const change = payment - cost
-
-  if (change < 0) {
-    return console.error("You don't have enough money!")
+class Till {
+  constructor(currentDenomination = availableDenomination) {
+    this.currentDenomination = currentDenomination.reverse()
+    this.reference = 100
   }
 
-  if (change === 0) {
-    return console.log('No change. Payed the exact sum.')
-  }
+  getChange(cost, payment) {
+    const toBeChanged = payment - cost
 
-  return splitAmount(change * 100)
+    if (toBeChanged < 0) {
+      return console.log('Not enough money has been paid!')
+    }
+
+    if (toBeChanged === 0) {
+      return console.log('No change. Payed the exact sum.')
+    }
+
+    this.amount = toBeChanged * this.reference
+    const {amount, change} = splitAmount({
+      currentDenomination: this.currentDenomination,
+      amount: toBeChanged * this.reference
+    })
+
+    if (amount > 0) {
+      return console.log(
+        "Can't change. The available denomination is not enough."
+      )
+    }
+
+    return console.log(
+      `Changed ${toBeChanged} into \n ${JSON.stringify(change)}`
+    )
+  }
 }
 
-console.log(getChange(0.36, 0.36))
+const a = new Till()
+a.getChange(5.34, 20)
