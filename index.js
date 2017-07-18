@@ -4,23 +4,25 @@
   const {denomination, descendingSort} = require('./constants.js')
   const availableDenomination = Object.keys(denomination)
 
-  const splitAmount = ({currentDenomination, amount}) => {
-    let currentAmount = amount
-    const change = {}
+  const util = {
+    splitAmount({currentDenomination, amount}) {
+      let currentAmount = amount
+      const change = {}
 
-    currentDenomination.map(item => {
-      if (currentAmount >= item) {
-        const quantity = parseInt(currentAmount / item)
-        currentAmount = currentAmount % item
-        Object.assign(change, {
-          [denomination[item]]: quantity
-        })
+      currentDenomination.map(item => {
+        if (currentAmount >= item) {
+          const quantity = parseInt(currentAmount / item)
+          currentAmount = currentAmount % item
+          Object.assign(change, {
+            [denomination[item]]: quantity
+          })
+        }
+      })
+
+      return {
+        amount: currentAmount,
+        change
       }
-    })
-
-    return {
-      amount: currentAmount,
-      change
     }
   }
 
@@ -41,7 +43,7 @@
         return 'No change. Payed the exact sum.'
       }
 
-      const {amount, change} = splitAmount({
+      const {amount, change} = util.splitAmount({
         currentDenomination: this.currentDenomination,
         amount: toBeChanged * this.reference
       })
@@ -53,6 +55,8 @@
       return `Changed £${toBeChanged} into ${JSON.stringify(change)}`
     }
   }
+
+  Till.util = util
 
   if (typeof module !== 'undefined' && typeof exports !== 'undefined') {
     module.exports = Till
