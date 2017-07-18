@@ -5,6 +5,9 @@
   "main": "index.js",
   "author": "Andrei Constantinescu <andrei@constantinescu.io>",
   "license": "MIT",
+  "scripts": {
+    "test": "tape spec.js | faucet"
+  },
   "dependencies": {
     "faucet": "^0.0.1",
     "tape": "^4.7.0"
