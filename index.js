@@ -23,6 +23,16 @@
         amount: currentAmount,
         change
       }
+    },
+
+    sendResponse({ok, data, value}) {
+      return {
+        ok,
+        payload: {
+          data,
+          value
+        }
+      }
     }
   }
 
@@ -36,11 +46,19 @@
       const toBeChanged = payment - cost
 
       if (toBeChanged < 0) {
-        return 'Not enough money has been paid!'
+        return util.sendResponse({
+          ok: false,
+          data: toBeChanged,
+          value: 'Not enough money has been paid!'
+        })
       }
 
       if (toBeChanged === 0) {
-        return 'No change. Payed the exact sum.'
+        return util.sendResponse({
+          ok: true,
+          data: toBeChanged,
+          value: null
+        })
       }
 
       const {amount, change} = util.splitAmount({
@@ -49,13 +67,18 @@
       })
 
       if (amount > 0) {
-        return "Can't change. The available denomination is not enough."
+        return util.sendResponse({
+          ok: false,
+          data: amount,
+          value: "Can't change. The available denomination is not enough."
+        })
       }
 
-      return {
-        toBeChanged,
-        change
-      }
+      return util.sendResponse({
+        ok: true,
+        data: toBeChanged,
+        value: change
+      })
     }
   }
 
