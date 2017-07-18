@@ -1,0 +1,12 @@
+{
+  "name": "get-change",
+  "version": "0.0.1",
+  "description": "A till simulator for changing money.",
+  "main": "index.js",
+  "author": "Andrei Constantinescu <andrei@constantinescu.io>",
+  "license": "MIT",
+  "dependencies": {
+    "faucet": "^0.0.1",
+    "tape": "^4.7.0"
+  }
+}
