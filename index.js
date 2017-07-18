@@ -52,7 +52,10 @@
         return "Can't change. The available denomination is not enough."
       }
 
-      return `Changed £${toBeChanged} into ${JSON.stringify(change)}`
+      return {
+        toBeChanged,
+        change
+      }
     }
   }
 
