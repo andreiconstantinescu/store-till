@@ -5,7 +5,7 @@
   const availableDenomination = Object.keys(denomination)
 
   const util = {
-    splitAmount({currentDenomination, amount}) {
+    splitAmount({currentDenomination, amount, reference}) {
       let currentAmount = amount
       const change = {}
 
@@ -20,7 +20,7 @@
       })
 
       return {
-        amount: currentAmount,
+        amount: currentAmount / reference,
         change
       }
     },
@@ -63,7 +63,8 @@
 
       const {amount, change} = util.splitAmount({
         currentDenomination: this.currentDenomination,
-        amount: toBeChanged * this.reference
+        amount: toBeChanged * this.reference,
+        reference: this.reference
       })
 
       if (amount > 0) {
