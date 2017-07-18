@@ -13,14 +13,4 @@ module.exports.denomination = {
   1: '1p'
 }
 
-module.exports.descendingSort = (itemA, itemB) => {
-  if (itemA > itemB) {
-    return -1
-  }
-
-  if (itemA < itemB) {
-    return 1
-  }
-
-  return 0
-}
+module.exports.descendingSort = (itemA, itemB) => itemB - itemA
